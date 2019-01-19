@@ -1,16 +1,26 @@
 {
   "name": "dez_tube",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "express": "^4.16.4",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0"
+    "bootstrap": "^4.1.2",
+    "ipfs-api": "^26.1.2",
+    "react": "^16.4.2",
+    "react-bootstrap": "^0.32.1",
+    "react-dom": "^16.4.2",
+    "react-scripts": "1.1.4",
+    "web3": "^1.0.0-beta.26"
+  },
+  "devDependencies": {
+    "css-loader": "^0.28.7"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "engines": {
+    "node": "10.2.1"
   }
 }
