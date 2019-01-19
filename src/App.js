@@ -2,17 +2,19 @@ import React, {Component} from 'react';
 import './App.css';
 import web3 from './web3';
 import Button from 'react-bootstrap/lib/Button';
-// import {abi, address} from './contract';
+import {abi, address} from './contract';
 import ipfs from './ipfs';
 
 
 let contract;
+
 class App extends Component{
     
     state={
         ipfsHash:'',
-        isMetaMasl:'',        
-        buffer:''
+        isMetaMask:'',        
+        buffer:'',
+        username:''
 
     }
 
@@ -32,53 +34,138 @@ class App extends Component{
         }
 
         if (this.state.isMetaMask) {
-            // contract = new web3.eth.Contract(abi, address);
+            contract = new web3.eth.Contract(abi, address);
+            
+            
         }
 
     };
 
 
     captureFile=(event)=>{
+        console.log("event");
         event.stopPropagation();
         event.preventDefault();
         const file=event.target.files[0];
         let reader=new window.FileReader();
         reader.readAsArrayBuffer(file);
-        reader.onloaded=()=>this.convertToBuffer(reader);
-
+        reader.onloadend = () => {
+            this.setState({ buffer: Buffer(reader.result) })
+            console.log('buffer', this.state.buffer)
+        }
         
     };
 
-    convertToBuffer=async(reader)=>{
-        const buffer=await Buffer.from(reader.result);
-        this.setState({buffer});
+    // convertToBuffer=async(reader)=>{
+    //     console.log("convert event");
+    //     const buffer=await Buffer.from(reader.result);
+    //     console.log(this.state.buffer);
+    //     this.setState({buffer});
+    //     // console.log(this.state.buffer);
         
-    };
+    // };
     uploadVideo= async(event)=>{
+        
         event.preventDefault();
         const accounts= await web3.eth.getAccounts();
+        console.log(accounts[0]);
 
+        ipfs.files.add(this.state.buffer,(err,ipfsHash)=>{
+            console.log("ipfs");
+        
+            console.log(err);           
+            // console.log(ipfsHash[0]); 
+            console.log(ipfsHash[0].path);
+            const ipfsHashCode=ipfsHash[0].path;
 
-        await ipfs.add(this.state.buffer,(err,ipfsHash)=>{
-            console.log(ipfsHash);
-            this.setState({ipfsHash:ipfsHash[0].hash});
+            contract.methods.InsertContent(ipfsHashCode,0,0).send({
+                "from":accounts[0]
+            }).then((reciept)=>{
+                console.log(reciept);
+            });
 
         });
 
         
     };
 
+    addUsername=async(event)=>{
+        event.preventDefault();
+        const data= new FormData(event.target);
+        const username=data.get("username");
+        const accounts=await web3.eth.getAccounts();
+
+        console.log(accounts[0]);
+        try{
+
+            contract.methods.register(username).send({
+                "from":accounts[0]
+
+            }).then((result)=>{
+                // console.log(err);
+                console.log(result);
+                
+            });
+        }catch(err){
+        
+            console.log(err);
+        }
+
+        
+
+    };
+    retreiveUsers=async(event)=>{
+        try
+        {
+            // contract.Users.call((err,result)=>{
+            //     console.log(result);
+            // });
+            // const users=await contract.methods.Users(0).call();
+            const accounts=await web3.eth.getAccounts();
+            const usersCount=await contract.methods.countUsers().call();
+            console.log(usersCount);
+            for(var i=0;i<usersCount;i++){
+                const user=await contract.methods.Users(i).call();
+                const username=await contract.methods.Username(user).call();
+                console.log(username);
+                const contributorNum=await contract.methods.contributorlength().call({
+                    "from":user
+                })
+                console.log(contributorNum);
+                for(var j=0;j<contributorNum;j++){
+                    const ipfshash=await contract.methods.contributor(user,j).call();
+                    console.log(ipfshash['ipfshash']);
+    
+                }
+
+            }
+            
+            
+        }catch(err){
+            console.log(err);
+        }
+    }
+
     render(){
         return(
             <div>
-            <form onSubmit={this.upload}>
+            <form onSubmit={this.uploadVideo}>
                 <input type="file" onChange={this.captureFile}/> 
 
                 <input type="submit" name="submit"/>
 
             </form>
+            <button onClick={this.retreiveUsers}>View</button>
+            <form onSubmit={this.addUsername}>
+                <label>Username</label>
+                <input name="username" type="text"/>
+                <input type="submit" name="submit"/>
+            </form>
+
             <div className="App">
-                <p>"working"</p>
+            <video height="320" height="240" controls>
+                <source src="https://ipfs.io/ipfs/QmdRaDFkUpeDnhmk6CMYNASVWmVaX3kff1k1dWAvDq5Uws" type="video/mov"/>
+            </video>             
             </div>
 
             </div>
