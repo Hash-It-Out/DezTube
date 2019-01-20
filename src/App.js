@@ -3,11 +3,12 @@ import './App.css';
 import web3 from './web3';
 import Button from 'react-bootstrap/lib/Button';
 import {abi, address} from './contract';
+import {abi2,address2} from "./contract2";
 import ipfs from './ipfs';
 
 
 let contract;
-
+let donateContract;
 class App extends Component{
     
     state={
@@ -35,15 +36,23 @@ class App extends Component{
 
         if (this.state.isMetaMask) {
             contract = new web3.eth.Contract(abi, address);
+            donateContract=new web3.eth.Contract(abi2,address2);
+            // console.log(contract);
+            // console.log(donateContract);
             try{    
                 const accounts=await web3.eth.getAccounts();
+                
                 const usersCount=await contract.methods.countUsers().call();
-                console.log(usersCount);
+                // console.log(usersCount);
                 let listOfVideos=[]
                 for(var i=0;i<usersCount;i++){
                     const user=await contract.methods.Users(i).call();
                     const username=await contract.methods.Username(user).call();
-                    console.log(username);
+                    if(user===accounts[0]){
+                        console.log("currentuser:",username);
+                        this.setState({username:username});
+                    }
+                    // console.log(username);
 
                     const contributorNum=await contract.methods.contributorlength().call({
                         "from":user
@@ -167,6 +176,7 @@ class App extends Component{
                 for(var j=0;j<contributorNum;j++){
                     const ipfshash=await contract.methods.contributor(user,j).call();
                     console.log(ipfshash['ipfshash']);
+                    
     
                 }
 
@@ -176,6 +186,33 @@ class App extends Component{
         }catch(err){
             console.log(err);
         }
+    }
+    donate=async(event)=>{
+        console.log("event");
+        event.preventDefault();
+
+        const data= new FormData(event.target);
+        const amount=data.get("value");
+        const id=data.get("id");
+        const accounts=await web3.eth.getAccounts();
+        const usersCount=await contract.methods.countUsers().call();
+        console.log(usersCount);
+        for(var i=0;i<usersCount;i++){
+            const user=await contract.methods.Users(i).call();
+            const username=await contract.methods.Username(user).call();
+            if(username===id){
+                await(donateContract.methods.donate(user).send({
+                    "from":accounts[0],
+                    "value": web3.utils.toWei(amount),
+                    
+                }));   
+            }
+            console.log(username);
+
+        }
+        
+    
+
     }
 
     retreiveVideos=async()=>{
@@ -226,13 +263,32 @@ class App extends Component{
             for(let key in e){
                 console.log(key);
                 console.log(e[key]);
-            
+                // const accounts=web3.eth.getAccounts();
+                // const username=contract.methods.Username(accounts[0]).call();
+                const username=this.state.username;
+                if(username===key){
                 video.push(<li>{key}
                 <video height="320" height="240" controls>
                     <source src={`https://ipfs.io/ipfs/${e[key]}`} type="video/mp4"/>
                 </video>
-                
+                {/* <form onSubmit={this.donate}>
+                    <input name="value" type="text"/>
+                    <input name="id" value={key} type="hidden"/>
+                    <input type="submit" name="submit"/>
+                </form> */}
                 </li>);
+                }else{
+                    video.push(<li>{key}
+                        <video height="320" height="240" controls>
+                            <source src={`https://ipfs.io/ipfs/${e[key]}`} type="video/mp4"/>
+                        </video>
+                        <form onSubmit={this.donate}>
+                            <input name="value" type="text"/>
+                            <input name="id" value={key} type="hidden"/>
+                            <input type="submit" name="submit"/>
+                        </form>
+                        </li>);
+                }
             }
             // console.log(i);
         });
