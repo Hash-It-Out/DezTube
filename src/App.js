@@ -4,9 +4,27 @@ import web3 from './web3';
 import Button from 'react-bootstrap/lib/Button';
 // import {abi, address} from './contract';
 import ipfs from './ipfs';
+import {render} from 'react-dom';
 
+import ReactDOM from "react-dom";
 
+// import { Router, Route, Switch } from "react-router-dom";
+
+import { Router, Route, Link, browserHistory, IndexRoute } from 'react-router'
+
+//history = {browserHistory}
 let contract;
+class About extends React.Component {
+   render() {
+      return (
+         <div>
+            <h1>About...</h1>
+         </div>
+      )
+   }
+}
+
+
 class App extends Component{
     
     state={
@@ -67,31 +85,41 @@ class App extends Component{
 
         
     };
-
-    render(){
-        return(
-            <div>
-            <form onSubmit={this.upload}>
-                <input type="file" onChange={this.captureFile}/> 
-
-                <input type="submit" name="submit"/>
-
-            </form>
-            <div className="App">
-                <p>"working"</p>
-            </div>
-
-            </div>
-        );      
-    }
+ 
+   // render(){
+   //    return (
+   //      <div>
+   //          <ul>
+   //          <li>Home</li>
+   //          <li>About</li>
+   //          <li>Contact</li>
+   //          </ul> 
+   //       </div>
+   //    )
+   // }
 
 
-    
 
 }
 
 
 
-export default App;
+class Home extends React.Component {
+   render() {
+      return (
+         <div>
+            <h1>Home...</h1>
+         </div>
+      )
+   }
+}
 
 
+
+ReactDOM.render((
+   <Router >
+      <Route path = "/" component = {Home}/>
+      <Route path = "about" component = {About} />
+      
+   </Router>
+));
