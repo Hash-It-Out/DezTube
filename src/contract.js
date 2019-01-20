@@ -152,6 +152,6 @@ const abi=[
 		"type": "function"
 	}
 ]
-const address='0xab5902716f9edcd839fd4a19c5fcf1b74baa303d'
+const address='0xc2cb1ef7f2b9b0cc4e0055715e69fe5bad5dd90b'
 
 module.exports={abi,address}

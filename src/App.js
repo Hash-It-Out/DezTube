@@ -14,8 +14,8 @@ class App extends Component{
         ipfsHash:'',
         isMetaMask:'',        
         buffer:'',
-        username:''
-
+        username:'',
+        video:[]
     }
 
 
@@ -35,8 +35,40 @@ class App extends Component{
 
         if (this.state.isMetaMask) {
             contract = new web3.eth.Contract(abi, address);
-            
-            
+            try{    
+                const accounts=await web3.eth.getAccounts();
+                const usersCount=await contract.methods.countUsers().call();
+                console.log(usersCount);
+                let listOfVideos=[]
+                for(var i=0;i<usersCount;i++){
+                    const user=await contract.methods.Users(i).call();
+                    const username=await contract.methods.Username(user).call();
+                    console.log(username);
+
+                    const contributorNum=await contract.methods.contributorlength().call({
+                        "from":user
+                    })
+                
+                    console.log(contributorNum);
+                    for(var j=0;j<contributorNum;j++){
+                        const ipfshash=await contract.methods.contributor(user,j).call();
+                        console.log(ipfshash['ipfshash']);
+                        let dic={};
+                        dic[username]=ipfshash['ipfshash'];
+                        listOfVideos.push(dic);
+                    }
+                
+
+                }
+                // console.log(list);
+                this.setState({video:listOfVideos});
+                // console.log(this.state.video);
+                
+
+                
+            }catch(err){
+                console.log(err);
+            }   
         }
 
     };
@@ -146,7 +178,65 @@ class App extends Component{
         }
     }
 
+    retreiveVideos=async()=>{
+        console.log("clicked");
+        // try{
+        //     const accounts=await web3.eth.getAccounts();
+        //     const usersCount=await contract.methods.countUsers().call();
+            
+        //     console.log(usersCount);
+        //     let table=[];
+        //     for(var i=0;i<usersCount;i++){
+        //         const user=await contract.methods.Users(i).call();
+        //         const username=await contract.methods.Username(user).call();
+        //         console.log(username);
+        //         let contributorVideos=[];
+        //         contributorVideos.push(<td>`${user}`</td>)    
+        //         const contributorNum=await contract.methods.contributorlength().call({
+        //             "from":user
+        //         })
+        //         console.log(contributorNum);
+        //         for(var j=0;j<contributorNum;j++){
+                    
+        //             const ipfshash=await contract.methods.contributor(user,j).call();
+        //             const ipfsHashFinal=ipfshash['ipfshash'];
+        //             console.log(ipfsHashFinal);
+        //             contributorVideos.push(<td>`${ipfsHashFinal}`</td>);
+        //             console.log(ipfshash['ipfshash']);
+
+        //         }
+        //         table.push(<tr>{contributorVideos}</tr>);
+
+        //     }
+            
+        //     return table;
+
+        // }catch(err){
+        //     console.log(err);
+        // }
+    }
+
     render(){
+        // const vals ={this.state.video};
+        const val=this.state.video;
+        // console.log(val);
+        const video=[]
+        val.forEach((e,i)=>{
+            console.log(e);
+            for(let key in e){
+                console.log(key);
+                console.log(e[key]);
+            
+                video.push(<li>{key}
+                <video height="320" height="240" controls>
+                    <source src={`https://ipfs.io/ipfs/${e[key]}`} type="video/mp4"/>
+                </video>
+                
+                </li>);
+            }
+            // console.log(i);
+        });
+        
         return(
             <div>
             <form onSubmit={this.uploadVideo}>
@@ -163,11 +253,19 @@ class App extends Component{
             </form>
 
             <div className="App">
-            <video height="320" height="240" controls>
-                <source src="https://ipfs.io/ipfs/QmdRaDFkUpeDnhmk6CMYNASVWmVaX3kff1k1dWAvDq5Uws" type="video/mov"/>
-            </video>             
+            {/*               */}
+                {/* {this.retreiveVideos()} */}
+{/*             
+            <table>
+                <tbody>
+                    {video}
+                </tbody>
+            </table> */}
+            <ul>
+                {video}
+            </ul>
             </div>
-
+                
             </div>
         );      
     }
