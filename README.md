@@ -1,6 +1,6 @@
 # Dez_tube
 A Decentralized Youtube
-
+<img src="http://www.stickpng.com/assets/images/580b57fcd9996e24bc43c545.png" />
 <h2><b>So what is the point of such a system?</b><h2>
 <p>Let's go deeper. There are three parties involved in this market. Users, platform providers and content creators. The <b><u>users dictate</b></u> the terms. Where they go the others follow.
 </p>
@@ -29,3 +29,4 @@ We are building a DApp which will enable viewers and content creators to interac
 <p>npm install</p>
 <p>npm run build</p>
 <p>npm run start</p>
+
