@@ -5,8 +5,7 @@ import Button from 'react-bootstrap/lib/Button';
 import {abi, address} from './contract';
 import {abi2,address2} from "./contract2";
 import ipfs from './ipfs';
-
-
+import {Grid,Col,Row} from 'react-bootstrap';
 let contract;
 let donateContract;
 class App extends Component{
@@ -41,9 +40,17 @@ class App extends Component{
             // console.log(donateContract);
             try{    
                 const accounts=await web3.eth.getAccounts();
-                
+                const usercheck=await contract.methods.Username(accounts[0]).call();
+                // console.log(usercheck);
+                if(usercheck===""){
+                    document.getElementById("useradd").style.display="block";
+                    document.getElementById("user_name").style.display="none";
+                }else{
+                    document.getElementById("useradd").style.display="none";
+                    document.getElementById("user_name").style.display="block";
+                }
                 const usersCount=await contract.methods.countUsers().call();
-                // console.log(usersCount);
+                console.log("number of users:",usersCount);
                 let listOfVideos=[]
                 for(var i=0;i<usersCount;i++){
                     const user=await contract.methods.Users(i).call();
@@ -145,7 +152,7 @@ class App extends Component{
             }).then((result)=>{
                 // console.log(err);
                 console.log(result);
-                
+                // document.getElementById("usersdd").display
             });
         }catch(err){
         
@@ -267,7 +274,7 @@ class App extends Component{
                 // const username=contract.methods.Username(accounts[0]).call();
                 const username=this.state.username;
                 if(username===key){
-                video.push(<li>{key}
+                video.push(<li>creator:{key}
                 <video height="320" height="240" controls>
                     <source src={`https://ipfs.io/ipfs/${e[key]}`} type="video/mp4"/>
                 </video>
@@ -278,16 +285,19 @@ class App extends Component{
                 </form> */}
                 </li>);
                 }else{
-                    video.push(<li>{key}
+                    video.push(
+                        <li className="cre" >creator:{key}
                         <video height="320" height="240" controls>
                             <source src={`https://ipfs.io/ipfs/${e[key]}`} type="video/mp4"/>
                         </video>
+                        <label>Donate</label>
                         <form onSubmit={this.donate}>
                             <input name="value" type="text"/>
                             <input name="id" value={key} type="hidden"/>
                             <input type="submit" name="submit"/>
                         </form>
-                        </li>);
+                        </li>
+                        );
                 }
             }
             // console.log(i);
@@ -295,33 +305,55 @@ class App extends Component{
         
         return(
             <div>
-            <form onSubmit={this.uploadVideo}>
-                <input type="file" onChange={this.captureFile}/> 
+            <Grid>
+                <Row >
+                <Col xs={12} md={6}>
+                <form onSubmit={this.uploadVideo}>
+                    <input type="file" onChange={this.captureFile} className="custom-file-input"/> 
+                    <br/>
+                    <Button type="submit" bsStyle="success">Submit</Button>
+                </form>
+                </Col>
+                {/* <Button bsStyle="success" onClick={this.retreiveUsers}>View</Button> */}
+                <Col xs={12} md={6}>
+                <div className="variable">
+                <form onSubmit={this.addUsername} className="useradd" id="useradd">
+                    <label class="username">Username</label>
+                    <input name="username" type="text"/>&nbsp;
+                    {/* <input type="submit" name="submit"/> */}
+                    <Button type="submit" bsStyle="success">Submit</Button>
 
-                <input type="submit" name="submit"/>
+                </form>
+                <p id="user_name" className="user_name">UserName:{this.state.username}</p>
+                </div>
+                </Col>
+            
+                </Row>
+                <br/>
+                <br/>
+                <Row>
 
-            </form>
-            <button onClick={this.retreiveUsers}>View</button>
-            <form onSubmit={this.addUsername}>
-                <label>Username</label>
-                <input name="username" type="text"/>
-                <input type="submit" name="submit"/>
-            </form>
-
-            <div className="App">
-            {/*               */}
-                {/* {this.retreiveVideos()} */}
-{/*             
-            <table>
-                <tbody>
+                <Col xs ={12} md={4}></Col>
+                <Col xs={12} md={4}>
+                <div className="App">
+                {/*               */}
+                    {/* {this.retreiveVideos()} */}
+    {/*             
+                <table>
+                    <tbody>
+                        {video}
+                    </tbody>
+                </table> */}
+                <ul className="videos">
                     {video}
-                </tbody>
-            </table> */}
-            <ul>
-                {video}
-            </ul>
-            </div>
+                </ul>
                 
+                </div>
+                </Col>
+                <Col></Col>
+                </Row>
+                </Grid>
+            
             </div>
         );      
     }
