@@ -12,15 +12,14 @@ There is a monopoly in the market for content control, control over what a user 
  <h2><b>DeCentralized System<b></h2>  
    <p>Similar platforms Dtube, Brave, SteemIt.</p>
 <br>
-<p>
-We are building a DApp which will enable viewers and content creators to interact directly without any 3rd Party getting in and controlling a viewers view or creators content.</p>
-<p>
-  We provide users a platform to upload their contents and view other user's content.</p>
-<p>We provide appreciation method that is a user can donate content creators for their content.
-<p>The Users have rights to view a Ad or block it.
-<p>The AdAgency can place their Ads on monthly/yearly basis to the platform.
-<p>The content creator will be appreciated with tokens once a certain number of users like his/her content.
-<p>The Users get benefitted for watching the Ads.</p>
+
+We are building a DApp which will enable viewers and content creators to interact directly without any 3rd Party getting in and controlling a viewers view or creators content.<br/>
+We provide users a platform to upload their contents and view other user's content.<br/>
+We provide appreciation method that is a user can donate content creators for their content.<br/>
+The Users have rights to view a Ad or block it.<br/>
+The AdAgency can place their Ads on monthly/yearly basis to the platform.<br/>
+The content creator will be appreciated with tokens once a certain number of users like his/her content.<br/>
+The Users get benefitted for watching the Ads.<br/>
 
 <br>
 
@@ -30,3 +29,6 @@ We are building a DApp which will enable viewers and content creators to interac
 <p>npm run build</p>
 <p>npm run start</p>
 
+<h2>Future Works</h2>
+Implement Live STreaming video with HLS.<br/>
+Reward Token<br/>
