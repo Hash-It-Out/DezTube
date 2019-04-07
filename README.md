@@ -13,10 +13,10 @@
 <p>Let's go deeper. There are three parties involved in this market. Users, platform providers and content creators. The <b><u>users dictate</b></u> the terms. Where they go the others follow.
 </p>
 <br>
-  <h2><b>Centralized System<b></h2>
-<p>
+  <h2>Centralized System</h2>
+
 There is a monopoly in the market for content control, control over what a user views, direct actions can be taken by monopolies to fire a content creator without even noticing him/her, Not much transparency in data, Can Increase fare anytime.
-</p>
+
 
 
 ------------------------------------------
