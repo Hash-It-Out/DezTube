@@ -60,3 +60,17 @@ There is a monopoly in the market for content control, control over what a user 
 ~ `Implement Live Streaming video with HLS.`<br/>
 ~ `Reward Token`<br/>
 ~ `UI Improvements`<br/>
+
+### Contributing
+
+ We're are open to `enhancements` & `bug-fixes` :smile:
+
+### Note
+
+- This project was done under `24 hours with minimal pre-preparation`
+
+------------------------------------------
+### Contributors
+
+- [@devanshslnk](https://github.com/devanshslnk)
+- [@priyamshah112](https://github.com/priyamshah112)
